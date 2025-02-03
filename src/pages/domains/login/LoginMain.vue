@@ -65,7 +65,7 @@ const signup = async () => {
     { label: '비밀번호', value: instructor.instructorPassword },
   ]
   if (validateAndNotify(inputs)) {
-    const url = '/api/instructor/signup'
+    const url = '/api/instructor'
     const response = await apiCall.post(url, null, instructor)
     if (response.result === apiCall.Response.SUCCESS) {
       isSignup.value = false
