@@ -50,8 +50,7 @@ const unlockMasking = () => {
         <InlineInput class="mb-1" label="사용자ID" v-model="props.setting.userId" type="text" :disabled="true" />
         <InlineInput class="mb-1" label="이메일" v-model="props.setting.userEmail" type="text" :disabled="true" />
         <InlineInput class="mb-1" label="전화번호" v-model="props.setting.userPhone" type="text" :disabled="true" />
-        <OptionSelectByCode label="그룹ID" codeGroupId="user_auth_group" v-model="watchTargets.userGroupId"
-            :disabled="!isWriter(AUTH_MENU)" />
+        <OptionSelectByCode label="그룹ID" codeGroupId="user_auth_group" v-model="watchTargets.userGroupId" />
         <div class="row g-2">
             <div class="col-2">
             </div>
@@ -63,8 +62,8 @@ const unlockMasking = () => {
                 </TooltipBox>
             </div>
             <div class="col">
-                <ElementButtons v-if="isWriter(AUTH_MENU)" refTable="UserPane" @save="emitSave" @delete="emitDelete"
-                    :watchTargets="watchTargets" :disableDelete="!props.setting.userId" />
+                <ElementButtons refTable="UserPane" @save="emitSave" @delete="emitDelete" :watchTargets="watchTargets"
+                    :disableDelete="!props.setting.userId" />
             </div>
         </div>
     </div>

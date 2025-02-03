@@ -2,7 +2,10 @@
 import { ref, watch, reactive } from 'vue'
 import { ascendArray, setSequence } from '@/scripts/utils'
 import apiCall from '@/scripts/api-call'
-import SubjectSettingPane from './SubjectSettingPane.vue';
+import SubjectSettingPane from './SubjectSettingPane.vue'
+import { useUserSession } from '@/scripts/session'
+
+const user = useUserSession()
 
 const table = reactive({
     headers: [
@@ -29,9 +32,10 @@ const selectSetting = (item: SubjectSetting) => {
 }
 
 const getSubjects = async () => {
+    console.log(user.value?.instructorId, user.value?.accountId)
     table.items.length = 0
 
-    const url = '/api/subjects'
+    const url = '/api/subject'
     const { body: pagedList } = await apiCall.get(url, null, null)
     if (pagedList) {
         page.total = pagedList.total
@@ -46,14 +50,28 @@ const getSubjects = async () => {
 }
 
 const saveSetting = async (item: SubjectSetting) => {
-    const url = '/api/subjects'
-    await apiCall.put(url, null, item)
+    const url = '/api/subject'
+    const subject = {
+        id: item.id,
+        subjectName: item.subjectName,
+        instructor: {
+            id: user.value?.instructorId
+        }
+    }
+    await apiCall.put(url, null, subject)
     getSubjects()
 }
 
 const deleteSetting = async (item: SubjectSetting) => {
-    const url = '/api/subjects'
-    await apiCall.delete(url, null, item)
+    const url = '/api/subject'
+    const subject = {
+        id: item.id,
+        subjectName: item.subjectName,
+        instructor: {
+            id: user.value?.instructorId
+        }
+    }
+    await apiCall.delete(url, null, subject)
     getSubjects()
 }
 
@@ -77,7 +95,7 @@ watch(() => page.count, () => {
             </div>
         </div>
         <ItemsTable refTable="SubjectPane" class="mt-2" :headers="table.headers" :items="table.items"
-            @rowSelected="selectSetting" :noaddition="true">
+            @rowSelected="selectSetting">
             <template #body="{ item }">
                 <SubjectSettingPane :setting="item" @save="saveSetting" @delete="deleteSetting" />
             </template>
