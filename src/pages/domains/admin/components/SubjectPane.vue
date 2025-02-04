@@ -74,7 +74,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <PanelCollapse title="교과과정">
+    <PanelCollapse title="과정 Quiz 관리">
         <div class="row">
             <div class="col">
             </div>
