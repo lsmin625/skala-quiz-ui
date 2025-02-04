@@ -2,22 +2,22 @@
 import { reactive, onMounted, ref } from 'vue'
 import apiCall from '@/scripts/api-call'
 import { notifyError, notifyConfirm } from '@/scripts/store-popups'
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router'
 import QuizItem from './components/QuizItem.vue'
+import { storeQuizQuestionList, useQuizQuestionList } from '@/scripts/store-quiz'
 
 const ITEM_KEY = 'skala-quiz-applicant'
-
-const subjectName = ref('')
 
 const applicant = reactive({
   id: 0,
   subjectId: 0,
-  applicantId: "",
-  applicantName: "",
+  subjectName: '',
+  applicantId: '',
+  applicantName: '',
   startTime: null,
   finishTime: null,
   applicantScore: 0,
-  quizAnswerList: []
+  quizAnswerList: [] as any
 })
 
 const router = useRouter()
@@ -27,25 +27,27 @@ const isStarted = ref(false)
 
 onMounted(() => {
   if (route.query.subjectId) {
-    subjectName.value = String(route.query.subjectName)
     applicant.subjectId = Number(route.query.subjectId)
+    applicant.subjectName = String(route.query.subjectName)
+
     generateQuiz()
-    const item = localStorage.getItem(ITEM_KEY)
-    if (item) {
-      const json = JSON.parse(item)
-      applicant.applicantId = json.applicantId
-      applicant.applicantName = json.applicantName
-    }
+    restoreApplicant()
   }
 })
 
-const table = reactive({
-  items: [] as any
-})
+const restoreApplicant = () => {
+  const item = localStorage.getItem(ITEM_KEY)
+  if (item) {
+    const json = JSON.parse(item)
+    applicant.applicantId = json.applicantId
+    applicant.applicantName = json.applicantName
+  }
+}
+
+const quizQuestionList = useQuizQuestionList()
 
 const generateQuiz = async () => {
   isStarted.value = false
-  table.items.length = 0
 
   const url = '/api/quiz/generate'
   const queryParams = {
@@ -57,7 +59,7 @@ const generateQuiz = async () => {
 
   const { body: pagedList } = await apiCall.get(url, null, queryParams)
   if (pagedList) {
-    table.items = pagedList.list
+    storeQuizQuestionList(pagedList.list)
   }
 }
 
@@ -92,7 +94,7 @@ const finishQuiz = () => {
   <div class="container-sm mt-3 border border-3 p-1" style="max-width: 600px">
     <div v-if="!isStarted">
       <div class="bg-info-subtle p-2 m-1">
-        <h2 class="text-center fw-bold m-3">Quiz : {{ subjectName }}</h2>
+        <h2 class="text-center fw-bold m-3">Quiz : {{ applicant.subjectName }}</h2>
         <InlineInput class="mb-2" label="ID" v-model="applicant.applicantId" type="text" placeholder="S000" />
         <InlineInput class="mb-2" label="이름" v-model="applicant.applicantName" type="text" placeholder="교육생 이름" />
         <div class="d-flex justify-content-end">
@@ -102,7 +104,7 @@ const finishQuiz = () => {
       </div>
     </div>
     <div v-else>
-      <template v-for="(item, index) in table.items" :key="index">
+      <template v-for="(item, index) in quizQuestionList" :key="index">
         <QuizItem :index="index" :setting="item" />
       </template>
       <div class="d-flex justify-content-end mt-2">
