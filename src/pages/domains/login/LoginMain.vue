@@ -8,13 +8,6 @@ import { notifyError } from '@/scripts/store-popups'
 
 const router = useRouter()
 
-onMounted(() => {
-  const session = getStoredUserSession()
-  if (session) {
-    instructor.instructorEmail = session.instructorEmail
-  }
-})
-
 const instructor = reactive({
   id: 0,
   instructorEmail: '',
@@ -32,14 +25,10 @@ const login = async () => {
     const url = '/api/instructor/login'
     const { body: session } = await apiCall.post(url, null, instructor)
     if (session) {
-      gotoMain(session)
+      setUserSession(session)
+      router.push('/main')
     }
   }
-}
-
-const gotoMain = (session: any) => {
-  setUserSession(session)
-  router.push('/main')
 }
 
 const isSignup = ref(false)
@@ -82,6 +71,13 @@ const checkId = async () => {
     idChecked.value = true
   }
 }
+
+onMounted(() => {
+  const session = getStoredUserSession()
+  if (session) {
+    instructor.instructorEmail = session.accountId
+  }
+})
 </script>
 
 <template>

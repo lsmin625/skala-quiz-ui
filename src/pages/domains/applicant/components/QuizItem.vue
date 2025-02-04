@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, reactive, toRaw } from 'vue'
+import { ref, onMounted } from 'vue'
 import { QuizQuestion, QuizAnswer, addQuizAnswer } from '@/scripts/store-quiz'
 
 const props = defineProps<{
