@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LoginMain from '@/pages/domains/login/LoginMain.vue'
 import LogoutMain from '@/pages/domains/login/LogoutMain.vue'
 import AdminMain from '@/pages/domains/admin/AdminMain.vue'
+import ApplicantMain from '@/pages/domains/applicant/ApplicantMain.vue'
+import ApplicantBye from '@/pages/domains/applicant/ApplicantBye.vue'
 import UnknownMenuPage from "@/pages/domains/main/UnknownMenuPage.vue"
 import WrongRoutingPage from './components/WrongRoutingPage.vue';
 
@@ -30,6 +32,16 @@ const router = createRouter({
             children: [],
         },
         {
+            path: '/quiz',
+            name: '/quiz',
+            component: ApplicantMain,
+        },
+        {
+            path: '/quiz-bye',
+            name: '/quiz-bye',
+            component: ApplicantBye,
+        },
+        {
             path: '/unknown',
             name: '/unknown',
             component: UnknownMenuPage,
@@ -38,11 +50,6 @@ const router = createRouter({
             path: '/wrong',
             name: '/wrong',
             component: WrongRoutingPage,
-        },
-        {
-            path: '/test',
-            name: '/test',
-            component: () => import('@/pages/domains/test/TestMain.vue')
         },
         {
             path: "/:pathMatch(.*)*",

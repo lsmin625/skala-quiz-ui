@@ -1,51 +1,39 @@
 <script setup lang="ts">
-import { ref, watch, reactive } from 'vue'
-import { ascendArray, setSequence } from '@/scripts/utils'
+import { ref, onMounted, reactive } from 'vue'
+import { ascendArray } from '@/scripts/utils'
 import apiCall from '@/scripts/api-call'
 import SubjectSettingPane from './SubjectSettingPane.vue'
 import { useUserSession } from '@/scripts/session'
+import { SubjectSetting } from './_interfaces'
+import { notifyConfirm } from '@/scripts/store-popups';
 
 const user = useUserSession()
 
 const table = reactive({
     headers: [
-        { label: "순번", value: "no" },
         { label: "과정ID", value: "id" },
-        { label: "과정명", value: "subjectName" }
+        { label: "과정명", value: "subjectName" },
+        { label: "강사", value: "accountName" }
     ],
     items: [] as any,
 })
 
-const page = reactive({
-    total: 0,
-    current: 1,
-    count: 10,
-})
-
-interface SubjectSetting {
-    id: string,
-    subjectName: string,
-}
-const SubjectSetting = ref<SubjectSetting>({} as SubjectSetting)
+const subjectSetting = ref<SubjectSetting>({} as SubjectSetting)
 const selectSetting = (item: SubjectSetting) => {
-    SubjectSetting.value = item
+    subjectSetting.value = item
 }
 
 const getSubjects = async () => {
-    console.log(user.value?.instructorId, user.value?.accountId)
     table.items.length = 0
 
     const url = '/api/subject'
     const { body: pagedList } = await apiCall.get(url, null, null)
     if (pagedList) {
-        page.total = pagedList.total
-        page.current = pagedList.offset + 1
         table.items = pagedList.list
         table.items.forEach((item: any) => {
-            item.backendApiCount = item.backendApiList?.length
+            item.accountName = user.value?.accountName
         })
         ascendArray(table.items, 'id')
-        setSequence(table.items, (page.current - 1) * page.count + 1)
     }
 }
 
@@ -58,48 +46,50 @@ const saveSetting = async (item: SubjectSetting) => {
             id: user.value?.instructorId
         }
     }
-    await apiCall.put(url, null, subject)
+    await apiCall.post(url, null, subject)
     getSubjects()
 }
 
 const deleteSetting = async (item: SubjectSetting) => {
-    const url = '/api/subject'
-    const subject = {
-        id: item.id,
-        subjectName: item.subjectName,
-        instructor: {
-            id: user.value?.instructorId
+    notifyConfirm('과목을 삭제 할까요?', async (confirmed: boolean) => {
+        if (confirmed) {
+            const url = '/api/subject'
+            const subject = {
+                id: item.id,
+                subjectName: item.subjectName,
+                instructor: {
+                    id: user.value?.instructorId
+                }
+            }
+            await apiCall.delete(url, null, subject)
+            getSubjects()
         }
-    }
-    await apiCall.delete(url, null, subject)
-    getSubjects()
+    })
 }
 
-watch(() => page.current, () => {
+onMounted(() => {
     getSubjects()
 })
 
-watch(() => page.count, () => {
-    page.current = 1
-    getSubjects()
-})
 </script>
 
 <template>
-    <PanelCollapse title="교과과정 관리">
+    <PanelCollapse title="교과과정">
         <div class="row">
             <div class="col">
             </div>
             <div class="col-3 d-flex justify-content-end">
-                <button class="btn btn-sm btn-primary me-1" @click="getSubjects">검색</button>
+                <button class="btn btn-sm btn-primary me-1" @click="getSubjects">조회</button>
             </div>
         </div>
         <ItemsTable refTable="SubjectPane" class="mt-2" :headers="table.headers" :items="table.items"
             @rowSelected="selectSetting">
+            <template #header>
+                <SubjectSettingPane :setting="subjectSetting" @save="saveSetting" @delete="deleteSetting" />
+            </template>
             <template #body="{ item }">
                 <SubjectSettingPane :setting="item" @save="saveSetting" @delete="deleteSetting" />
             </template>
         </ItemsTable>
-        <PageNavigator :totalCount="page.total" v-model:current="page.current" v-model:count="page.count" />
     </PanelCollapse>
 </template>
