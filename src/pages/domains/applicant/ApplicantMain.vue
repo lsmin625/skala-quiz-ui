@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { reactive, onMounted, ref, watch } from 'vue'
+import { reactive, onMounted, ref } from 'vue'
 import apiCall from '@/scripts/api-call'
-import { validateAndNotify, isEmpty } from '@/scripts/validater'
-import { setUserSession, getStoredUserSession } from '@/scripts/session'
-import { notifyError } from '@/scripts/store-popups'
+import { notifyError, notifyConfirm } from '@/scripts/store-popups'
 import { useRoute, useRouter } from 'vue-router';
 import QuizItem from './components/QuizItem.vue'
+
+const ITEM_KEY = 'skala-quiz-applicant'
 
 const subjectName = ref('')
 
@@ -23,11 +23,19 @@ const applicant = reactive({
 const router = useRouter()
 const route = useRoute()
 
+const isStarted = ref(false)
+
 onMounted(() => {
   if (route.query.subjectId) {
     subjectName.value = String(route.query.subjectName)
     applicant.subjectId = Number(route.query.subjectId)
     generateQuiz()
+    const item = localStorage.getItem(ITEM_KEY)
+    if (item) {
+      const json = JSON.parse(item)
+      applicant.applicantId = json.applicantId
+      applicant.applicantName = json.applicantName
+    }
   }
 })
 
@@ -36,6 +44,9 @@ const table = reactive({
 })
 
 const generateQuiz = async () => {
+  isStarted.value = false
+  table.items.length = 0
+
   const url = '/api/quiz/generate'
   const queryParams = {
     subjectId: applicant.subjectId,
@@ -50,15 +61,29 @@ const generateQuiz = async () => {
   }
 }
 
-const isStarted = ref(false)
-
 const startQuiz = () => {
+  const regex = /^S(00[1-9]|0[1-9][0-9]|[1-9][0-9]{2})$/;
+  if (!regex.test(applicant.applicantId)) {
+    notifyError('ID를 정확하게 입력하세요.')
+    return
+  }
+
+  const item = {
+    applicantId: applicant.applicantId,
+    applicantName: applicant.applicantName
+  }
+  localStorage.setItem(ITEM_KEY, JSON.stringify(item))
+
   isStarted.value = true
 }
 
 const finishQuiz = () => {
-  isStarted.value = false
-  router.push('/quiz-bye')
+  notifyConfirm('답안을 제출 하시겠습니까?', (confirmed: boolean) => {
+    if (confirmed) {
+      isStarted.value = false
+      router.push('/quiz-bye')
+    }
+  })
 }
 
 </script>
