@@ -1,19 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue'
-
-interface Quiz {
-  id: number,
-  quizQuestion: string,
-  quizDifficulty: number,
-  quizType: number,
-  quizAnswer: string,
-  quizScore: number,
-  quizOptionList: string[]
-}
+import { ref, onMounted, reactive, toRaw } from 'vue'
+import { QuizQuestion, QuizAnswer, addQuizAnswer } from '@/scripts/store-quiz'
 
 const props = defineProps<{
   index: number,
-  setting: Quiz
+  setting: QuizQuestion
 }>()
 
 interface Option {
@@ -21,9 +12,16 @@ interface Option {
   value: any
 }
 
+const answer = ref<QuizAnswer>({
+  quizId: props.setting.id,
+  quizQuestion: `${props.index + 1}. ${props.setting.quizQuestion}`,
+  quizAnswer: props.setting.quizQuestion,
+  applicantAnswer: ''
+})
+
 const options = ref<Option[]>([])
 
-onMounted(() => {
+const buildOptions = () => {
   if (props.setting.quizType === 0) {
     props.setting.quizOptionList.forEach((option: string) => {
       options.value.push({
@@ -32,13 +30,11 @@ onMounted(() => {
       })
     })
   }
-})
+}
 
-const answer = reactive({
-  quizId: props.setting.id,
-  quizQuestion: `${props.index + 1}. ${props.setting.quizQuestion}`,
-  quizAnswer: props.setting.quizQuestion,
-  applicantAnswer: ''
+onMounted(() => {
+  buildOptions()
+  addQuizAnswer(answer.value)
 })
 
 </script>

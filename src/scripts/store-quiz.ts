@@ -52,7 +52,11 @@ export const useQuizAnswerList = () => {
             quizAnswerList.value = data
         }
     }
-    return toRef(quizAnswerList)
+    return toRef(quizAnswerList.value)
+}
+
+export const addQuizAnswer = (answer: QuizAnswer) => {
+    quizAnswerList.value.push(toRaw(answer))
 }
 
 export const storeQuizAnswerList = (answers: QuizAnswer[]) => {
@@ -63,18 +67,4 @@ export const storeQuizAnswerList = (answers: QuizAnswer[]) => {
 const getStoredQuizAnswers = () => {
     const item = localStorage.getItem(QUIZ_ANSWER)
     return item ? decodeFromBase64(item) : null
-}
-
-export const convertQuestionsToAnswers = (questions: QuizQuestion[]): QuizAnswer[] => {
-    const answers = ref<QuizAnswer[]>([])
-    questions.forEach(question => {
-        answers.value.push({
-            quizId: question.id,
-            quizQuestion: question.quizQuestion,
-            quizAnswer: question.quizAnswer,
-            applicantAnswer: ''
-        })
-    })
-
-    return answers.value
 }

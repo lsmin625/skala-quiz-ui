@@ -1,23 +1,18 @@
 <script setup lang="ts">
-import { reactive, onMounted, ref } from 'vue'
+import { reactive, onMounted, ref, toRaw } from 'vue'
 import apiCall from '@/scripts/api-call'
 import { notifyError, notifyConfirm } from '@/scripts/store-popups'
 import { useRoute, useRouter } from 'vue-router'
 import QuizItem from './components/QuizItem.vue'
-import { storeQuizQuestionList, useQuizQuestionList } from '@/scripts/store-quiz'
+import { storeQuizQuestionList, useQuizQuestionList, useQuizAnswerList } from '@/scripts/store-quiz'
 
 const ITEM_KEY = 'skala-quiz-applicant'
 
 const applicant = reactive({
-  id: 0,
   subjectId: 0,
   subjectName: '',
   applicantId: '',
   applicantName: '',
-  startTime: null,
-  finishTime: null,
-  applicantScore: 0,
-  quizAnswerList: [] as any
 })
 
 const router = useRouter()
@@ -46,6 +41,8 @@ const restoreApplicant = () => {
 
 const quizQuestionList = useQuizQuestionList()
 
+const quizAnswerList = useQuizAnswerList()
+
 const generateQuiz = async () => {
   isStarted.value = false
 
@@ -63,7 +60,7 @@ const generateQuiz = async () => {
   }
 }
 
-const startQuiz = () => {
+const startQuiz = async () => {
   const regex = /^S(00[1-9]|0[1-9][0-9]|[1-9][0-9]{2})$/;
   if (!regex.test(applicant.applicantId)) {
     notifyError('ID를 정확하게 입력하세요.')
@@ -76,16 +73,37 @@ const startQuiz = () => {
   }
   localStorage.setItem(ITEM_KEY, JSON.stringify(item))
 
+  const url = '/api//applicant-quiz/start'
+  const requestBody = getRequestBody()
+  await apiCall.post(url, null, requestBody)
+
   isStarted.value = true
 }
 
 const finishQuiz = () => {
-  notifyConfirm('답안을 제출 하시겠습니까?', (confirmed: boolean) => {
+  notifyConfirm('답안을 제출 하시겠습니까?', async (confirmed: boolean) => {
     if (confirmed) {
+      const url = '/api//applicant-quiz/submit'
+      const requestBody = getRequestBody()
+      await apiCall.post(url, null, requestBody)
+
       isStarted.value = false
       router.push('/quiz-bye')
     }
   })
+}
+
+const getRequestBody = () => {
+  return {
+    id: 0,
+    subjectId: applicant.subjectId,
+    applicantId: applicant.applicantId,
+    applicantName: applicant.applicantName,
+    startTime: null,
+    finishTime: null,
+    applicantScore: 0,
+    quizAnswerList: toRaw(quizAnswerList.value)
+  }
 }
 
 </script>
