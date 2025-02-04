@@ -4,8 +4,7 @@ import LogoutMain from '@/pages/domains/login/LogoutMain.vue'
 import AdminMain from '@/pages/domains/admin/AdminMain.vue'
 import ApplicantMain from '@/pages/domains/applicant/ApplicantMain.vue'
 import ApplicantBye from '@/pages/domains/applicant/ApplicantBye.vue'
-import UnknownMenuPage from "@/pages/domains/main/UnknownMenuPage.vue"
-import WrongRoutingPage from './components/WrongRoutingPage.vue';
+import WrongRoutingPage from './components/WrongRoutingPage.vue'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -40,11 +39,6 @@ const router = createRouter({
             path: '/quiz-bye',
             name: '/quiz-bye',
             component: ApplicantBye,
-        },
-        {
-            path: '/unknown',
-            name: '/unknown',
-            component: UnknownMenuPage,
         },
         {
             path: '/wrong',
