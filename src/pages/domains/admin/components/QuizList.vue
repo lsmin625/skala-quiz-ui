@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive } from 'vue'
 import { ascendArray, setSequence } from '@/scripts/utils'
 import apiCall from '@/scripts/api-call'
 import { notifyConfirm, notifySuccess, notifyError } from '@/scripts/store-popups';
@@ -45,6 +45,10 @@ const getQuizList = async () => {
     }
 }
 
+const hideQuizList = () => {
+    table.items.length = 0
+}
+
 const downloadTemplate = async () => {
     const url = '/api/quiz/excel/template'
     await apiCall.download(url, null, null, `${props.setting.subjectName}-template-${getTimestamp()}`)
@@ -87,6 +91,7 @@ const quizOption = reactive({
 })
 
 const isSetup = ref(false)
+
 const setupQuiz = async () => {
     table.items.length = 0
     isSetup.value = true
@@ -130,10 +135,6 @@ const clearCacheQuiz = async () => {
     await apiCall.get(url, null, queryParams)
 }
 
-onMounted(() => {
-    getQuizList()
-})
-
 </script>
 
 <template>
@@ -143,6 +144,13 @@ onMounted(() => {
                 <h4 class="fw-bold">Quiz 문항</h4>
             </div>
             <div class="col d-flex justify-content-end">
+                <button v-if="table.items.length === 0" class="btn btn-sm btn-outline-primary me-1"
+                    @click="getQuizList">
+                    보이기
+                </button>
+                <button v-else class="btn btn-sm btn-outline-primary me-1" @click="hideQuizList">
+                    숨기기
+                </button>
                 <TooltipBox tips="템플릿 받기" :no-icon="true">
                     <button class="btn btn-sm btn-outline-primary p-0 px-1 me-1" @click="downloadTemplate">
                         <i class="bi bi-file-earmark-arrow-down file-icon"></i>
@@ -160,10 +168,7 @@ onMounted(() => {
                         <i class="bi bi-filetype-xlsx file-icon"></i>
                     </button>
                 </TooltipBox>
-                <button class="btn btn-sm btn-outline-primary me-1" @click="getQuizList">
-                    검색
-                </button>
-                <button class="btn btn-sm btn-secondary" @click="setupQuiz">
+                <button class="btn btn-sm btn-outline-danger" @click="setupQuiz">
                     Quiz 출제
                 </button>
             </div>

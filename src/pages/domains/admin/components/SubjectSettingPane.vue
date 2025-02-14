@@ -2,6 +2,7 @@
 import { reactive, onMounted } from 'vue'
 import { SubjectSetting } from './_interfaces'
 import QuizList from './QuizList.vue';
+import QuizSummary from './QuizSummary.vue';
 import apiCall from '@/scripts/api-call'
 import { getTimestamp } from '@/scripts/time-util';
 
@@ -87,13 +88,18 @@ onMounted(async () => {
                     Quiz 채점
                 </button>
                 <button v-if="watchTargets.applicantCount > 0" class="btn btn-sm btn-secondary" @click="downloadScore">
-                    채점 결과
+                    점수 (XLS)
                 </button>
             </div>
         </div>
         <div v-if="props.setting.id > 0" class="row g-2">
             <div class="col">
                 <QuizList :setting="props.setting" />
+            </div>
+        </div>
+        <div v-if="props.setting.id > 0" class="row g-2">
+            <div class="col">
+                <QuizSummary :setting="props.setting" />
             </div>
         </div>
     </div>
