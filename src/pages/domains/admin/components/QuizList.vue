@@ -47,7 +47,7 @@ const getQuizList = async () => {
 
 const downloadTemplate = async () => {
     const url = '/api/quiz/excel/template'
-    await apiCall.download(url, null, null, `quiz-template-${getTimestamp()}`)
+    await apiCall.download(url, null, null, `${props.setting.subjectName}-template-${getTimestamp()}`)
 }
 
 const fileInput = ref<HTMLInputElement | null>(null)
@@ -77,7 +77,7 @@ const selectFile = async () => {
 
 const downloadExcel = async () => {
     const url = `/api/quiz/excel/download?subjectId=${props.setting.id}`
-    await apiCall.download(url, null, null, `menu-download-${getTimestamp()}`)
+    await apiCall.download(url, null, null, `${props.setting.subjectName}-quiz-${getTimestamp()}`)
 }
 
 const quizOption = reactive({
@@ -139,7 +139,7 @@ onMounted(() => {
 <template>
     <div class="bg-secondary-subtle m-0 mt-2 p-1">
         <div class="row m-1">
-            <div class="col-2 d-flex justify-content-end">
+            <div class="col-2 d-flex justify-content-start">
                 <h4 class="fw-bold">Quiz 문항</h4>
             </div>
             <div class="col d-flex justify-content-end">
@@ -160,10 +160,10 @@ onMounted(() => {
                         <i class="bi bi-filetype-xlsx file-icon"></i>
                     </button>
                 </TooltipBox>
-                <button class="btn btn-sm btn-secondary me-1" @click="getQuizList">
+                <button class="btn btn-sm btn-outline-primary me-1" @click="getQuizList">
                     검색
                 </button>
-                <button class="btn btn-sm btn-secondary me-1" @click="setupQuiz">
+                <button class="btn btn-sm btn-secondary" @click="setupQuiz">
                     Quiz 출제
                 </button>
             </div>

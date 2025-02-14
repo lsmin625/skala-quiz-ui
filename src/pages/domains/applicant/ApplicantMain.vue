@@ -4,7 +4,7 @@ import apiCall from '@/scripts/api-call'
 import { notifyError, notifyConfirm } from '@/scripts/store-popups'
 import { useRoute, useRouter } from 'vue-router'
 import QuizItem from './components/QuizItem.vue'
-import { storeQuizQuestionList, useQuizQuestionList, useQuizAnswerList } from '@/scripts/store-quiz'
+import { storeQuizQuestionList, useQuizQuestionList, storeQuizAnswerList, useQuizAnswerList } from '@/scripts/store-quiz'
 
 const ITEM_KEY = 'skala-quiz-applicant'
 
@@ -20,12 +20,12 @@ const route = useRoute()
 
 const isStarted = ref(false)
 
-onMounted(() => {
+onMounted(async () => {
   if (route.query.subjectId) {
     applicant.subjectId = Number(route.query.subjectId)
     applicant.subjectName = String(route.query.subjectName)
 
-    generateQuiz()
+    await generateQuiz()
     restoreApplicant()
   }
 })
@@ -88,6 +88,8 @@ const finishQuiz = () => {
       await apiCall.post(url, null, requestBody)
 
       isStarted.value = false
+      storeQuizQuestionList([])
+      storeQuizAnswerList([])
       router.push('/quiz-bye')
     }
   })
