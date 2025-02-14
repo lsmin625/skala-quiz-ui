@@ -5,6 +5,7 @@ import { getTimestamp } from '@/scripts/time-util';
 import { SubjectSetting } from './_interfaces'
 
 const BASE_URL = "http://localhost:5173/quiz";
+// const BASE_URL = "https://smlee1-skala-pro-sk25a-prop5173nprofessor.remote.amdp.skala-ai.com/quiz";
 
 const props = defineProps<{
   setting: SubjectSetting
@@ -24,7 +25,7 @@ const show = () => {
   if (!document.getElementById("quizCode")?.classList.contains("show")) {
     quizCodeButton.value?.click();
     qr.url = `${BASE_URL}?subjectId=${props.setting.id}&subjectName=${props.setting.subjectName}&timestamp=${getTimestamp()}`;
-    QRCode.toCanvas(document.getElementById("canvas"), qr.url);
+    QRCode.toCanvas(document.getElementById("canvas"), qr.url, { errorCorrectionLevel: "L" });
   }
 };
 
@@ -78,7 +79,7 @@ defineExpose({
           </div>
           <div class="col-4 d-flex justify-content-end">
             <button type="button" class="btn btn-primary me-2" data-bs-dismiss="modal" @click="hide">Quiz 종료
-              종료</button>
+            </button>
           </div>
         </div>
       </div>
