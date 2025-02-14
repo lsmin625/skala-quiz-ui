@@ -19,8 +19,16 @@ const table = reactive({
 })
 
 const subjectSetting = ref<SubjectSetting>({} as SubjectSetting)
+
 const selectSetting = (item: SubjectSetting) => {
     subjectSetting.value = item
+}
+
+const addSetting = () => {
+    subjectSetting.value = {
+        id: 0,
+        subjectName: ''
+    }
 }
 
 const getSubjects = async () => {
@@ -83,7 +91,7 @@ onMounted(() => {
             </div>
         </div>
         <ItemsTable refTable="SubjectPane" class="mt-2" :headers="table.headers" :items="table.items"
-            @rowSelected="selectSetting">
+            @rowSelected="selectSetting" @addClicked="addSetting">
             <template #header>
                 <SubjectSettingPane :setting="subjectSetting" @save="saveSetting" @delete="deleteSetting" />
             </template>
