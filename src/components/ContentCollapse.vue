@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { hasAuthMenu } from '@/scripts/session';
 import { isEmpty } from '@/scripts/validater';
 
 const props = defineProps<{
@@ -20,7 +19,7 @@ watch(toggle, (value: any) => {
 </script>
 
 <template>
-    <div v-if="!isEmpty(props.authMenu) && hasAuthMenu(props.authMenu)" class="container-fluid mt-1 me-0 p-0">
+    <div v-if="!isEmpty(props.authMenu)" class="container-fluid mt-1 me-0 p-0">
         <div class="d-flex justify-content-start align-items-center">
             <button class="btn btn-link" type="button" data-bs-toggle="collapse" :data-bs-target="'#' + elementId"
                 @click="toggle = !toggle">
