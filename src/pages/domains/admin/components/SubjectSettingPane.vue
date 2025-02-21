@@ -4,7 +4,7 @@ import { SubjectSetting } from './_interfaces'
 import QuizList from './QuizList.vue';
 import QuizSummary from './QuizSummary.vue';
 import apiCall from '@/scripts/api-call'
-import { getTimestamp, getDate } from '@/scripts/time-util';
+import { getDate } from '@/scripts/time-util';
 
 const props = defineProps<{
     setting: SubjectSetting
@@ -31,23 +31,6 @@ const emitDelete = () => {
     setting.subjectName = watchTargets.subjectName
     emit('delete', setting)
 }
-
-
-const scoreQuiz = async () => {
-    const url = '/api/applicant-quiz/score'
-    const subject = {
-        id: props.setting.id,
-        subjectName: props.setting.subjectName,
-        instructor: null
-    }
-    await apiCall.post(url, null, subject)
-}
-
-const downloadScore = async () => {
-    const url = `/api/applicant-quiz/excel/subject?subjectId=${props.setting.id}`
-    await apiCall.download(url, null, null, `${props.setting.subjectName}-score-${getTimestamp()}`)
-}
-
 
 const getApplicantCount = async () => {
     watchTargets.totalCount = 0
@@ -94,12 +77,6 @@ onMounted(async () => {
                 </button>
                 <button class="btn btn-sm btn-danger me-1" @click="emitDelete">
                     삭제
-                </button>
-                <button v-if="watchTargets.totalCount > 0" class="btn btn-sm btn-secondary me-1" @click="scoreQuiz">
-                    Quiz 채점
-                </button>
-                <button v-if="watchTargets.totalCount > 0" class="btn btn-sm btn-secondary" @click="downloadScore">
-                    점수 (XLS)
                 </button>
             </div>
         </div>

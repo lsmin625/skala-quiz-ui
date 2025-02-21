@@ -3,6 +3,7 @@ import { reactive } from 'vue'
 import { ascendArray } from '@/scripts/utils'
 import apiCall from '@/scripts/api-call'
 import { SubjectSetting } from './_interfaces'
+import { getTimestamp } from '@/scripts/time-util'
 
 const props = defineProps<{
     setting: SubjectSetting
@@ -34,6 +35,22 @@ const hideSummary = () => {
     table.items.length = 0
 }
 
+
+const scoreQuiz = async () => {
+    const url = '/api/applicant-quiz/score'
+    const subject = {
+        id: props.setting.id,
+        subjectName: props.setting.subjectName,
+        instructor: null
+    }
+    await apiCall.post(url, null, subject)
+}
+
+const downloadScore = async () => {
+    const url = `/api/applicant-quiz/excel/subject?subjectId=${props.setting.id}`
+    await apiCall.download(url, null, null, `${props.setting.subjectName}-score-${getTimestamp()}`)
+}
+
 </script>
 
 <template>
@@ -43,12 +60,18 @@ const hideSummary = () => {
                 <h4 class="fw-bold">Quiz 응답 현황</h4>
             </div>
             <div class="col d-flex justify-content-end">
+                <button class="btn btn-sm btn-outline-danger me-1" @click="scoreQuiz">
+                    Quiz 채점
+                </button>
                 <button v-if="table.items.length === 0" class="btn btn-sm btn-outline-primary me-1"
                     @click="showSummary">
                     보이기
                 </button>
                 <button v-else class="btn btn-sm btn-outline-primary me-1" @click="hideSummary">
                     숨기기
+                </button>
+                <button class="btn btn-sm btn-secondary" @click="downloadScore">
+                    점수 (XLS)
                 </button>
             </div>
         </div>
