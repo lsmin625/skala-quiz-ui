@@ -21,9 +21,9 @@ watchEffect(() => {
         <div class="d-flex justify-content-start align-items-center">
             <button class="btn btn-link" type="button" data-bs-toggle="collapse" :data-bs-target="'#' + elementId"
                 @click="toggle = !toggle">
-                <i :class="['bi', toggle ? 'bi-dash-square' : 'bi-plus-square']" style="font-size: 1.1em;"></i>
+                <i :class="['bi', toggle ? 'bi-dash-square' : 'bi-plus-square']" style="font-size: 1.3em;"></i>
             </button>
-            <h6 class="fw-bold m-0">{{ props.title }}</h6>
+            <h4 class="fw-bold m-0">{{ props.title }}</h4>
         </div>
         <div class="collapse ms-2 p-2 pt-0" :id="elementId">
             <slot></slot>

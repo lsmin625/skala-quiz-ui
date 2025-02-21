@@ -146,7 +146,7 @@ const clearCacheQuiz = async () => {
     <div class="bg-warning-subtle m-0 mt-2 p-1">
         <div class="row m-1">
             <div class="col-2 d-flex justify-content-start">
-                <h4 class="fw-bold">Quiz 문항</h4>
+                <h5 class="fw-bold pt-2"><i class="bi bi-question-circle fw-bold fs-5 me-2"></i>Quiz 출제 관리</h5>
             </div>
             <div class="col d-flex justify-content-end">
                 <TooltipBox tips="템플릿 받기" :no-icon="true">
