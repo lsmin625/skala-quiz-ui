@@ -144,13 +144,6 @@ const clearCacheQuiz = async () => {
                 <h4 class="fw-bold">Quiz 문항</h4>
             </div>
             <div class="col d-flex justify-content-end">
-                <button v-if="table.items.length === 0" class="btn btn-sm btn-outline-primary me-1"
-                    @click="getQuizList">
-                    보이기
-                </button>
-                <button v-else class="btn btn-sm btn-outline-primary me-1" @click="hideQuizList">
-                    숨기기
-                </button>
                 <TooltipBox tips="템플릿 받기" :no-icon="true">
                     <button class="btn btn-sm btn-outline-primary p-0 px-1 me-1" @click="downloadTemplate">
                         <i class="bi bi-file-earmark-arrow-down file-icon"></i>
@@ -168,6 +161,13 @@ const clearCacheQuiz = async () => {
                         <i class="bi bi-filetype-xlsx file-icon"></i>
                     </button>
                 </TooltipBox>
+                <button v-if="table.items.length === 0" class="btn btn-sm btn-outline-primary me-1"
+                    @click="getQuizList">
+                    보이기
+                </button>
+                <button v-else class="btn btn-sm btn-outline-primary me-1" @click="hideQuizList">
+                    숨기기
+                </button>
                 <button class="btn btn-sm btn-outline-danger" @click="setupQuiz">
                     Quiz 출제
                 </button>
