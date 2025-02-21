@@ -51,7 +51,7 @@ const logout = () => {
   <div class="container-fluid">
     <div class="row">
       <div class="col d-flex justify-content-center">
-        <span class="fs-2 fw-bold">SKALA Quiz 관리</span>
+        <span class="fs-2 fw-bold">SKALA 학습 관리</span>
       </div>
       <div class="col-2 d-flex justify-content-end">
         <div class="dropdown">

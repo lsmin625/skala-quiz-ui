@@ -15,6 +15,7 @@ const props = defineProps<{
 const table = reactive({
     headers: [
         { label: "순번", value: "no" },
+        { label: "질문ID", value: "id" },
         { label: "질문", value: "quizQuestion" },
         { label: "난도", value: "quizDifficulty" },
         { label: "유형", value: "quizType" },
@@ -106,6 +107,10 @@ const startQuiz = async () => {
     await generateQuiz()
 }
 
+const cancelQuiz = () => {
+    isSetup.value = false
+}
+
 const quizCodeModal = ref()
 const showQuizCodeModal = () => {
     if (quizCodeModal.value) {
@@ -138,7 +143,7 @@ const clearCacheQuiz = async () => {
 </script>
 
 <template>
-    <div class="bg-secondary-subtle m-0 mt-2 p-1">
+    <div class="bg-warning-subtle m-0 mt-2 p-1">
         <div class="row m-1">
             <div class="col-2 d-flex justify-content-start">
                 <h4 class="fw-bold">Quiz 문항</h4>
@@ -168,7 +173,7 @@ const clearCacheQuiz = async () => {
                 <button v-else class="btn btn-sm btn-outline-primary me-1" @click="hideQuizList">
                     숨기기
                 </button>
-                <button class="btn btn-sm btn-outline-danger" @click="setupQuiz">
+                <button class="btn btn-sm btn-outline-primary" @click="setupQuiz">
                     Quiz 출제
                 </button>
             </div>
@@ -179,13 +184,16 @@ const clearCacheQuiz = async () => {
             </ItemsTable>
         </template>
         <template v-if="isSetup">
-            <div class="m-1 p-2 bg-danger-subtle">
+            <div class="m-1 p-2 bg-warning-subtle">
                 <InlineInput class="m-1" label="난이도(상)" v-model="quizOption.high" type="number" />
                 <InlineInput class="m-1" label="난이도(중)" v-model="quizOption.medium" type="number" />
                 <InlineInput class="m-1" label="난이도(하)" v-model="quizOption.low" type="number" />
                 <div class="d-flex justify-content-end m-2">
-                    <button class="btn btn-sm btn-danger me-1" @click="startQuiz">
+                    <button class="btn btn-sm btn-outline-primary me-1" @click="startQuiz">
                         Quiz 시작
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary me-1" @click="cancelQuiz">
+                        취소
                     </button>
                 </div>
             </div>
