@@ -18,7 +18,8 @@ export interface QuizAnswer {
     quizId: number,
     quizQuestion: string,
     quizAnswer: string,
-    applicantAnswer: string
+    applicantAnswer: string,
+    applicantScore: number
 }
 
 const quizQuestionList = ref<QuizQuestion[]>([])

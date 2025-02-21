@@ -41,12 +41,9 @@ onMounted(() => {
 
 <template>
   <div class="p-1 bg-secondary-subtle">
-    <InlineTextarea class="mb-1" v-model="answer.quizQuestion" :disabled="true" />
-    <div class="row">
-      <div class="col-2">
-        <label class="col-form-label form-control-sm">답</label>
-      </div>
-      <div class="col">
+    <InlineTextarea class="mt-2 mb-1" v-model="answer.quizQuestion" :disabled="true" />
+    <div class="row fw-bold">
+      <div class="col ms-3">
         <OptionRadio v-if="props.setting.quizType === 0" :options="options" v-model="answer.applicantAnswer"
           class="mb-1" />
         <InlineInput v-else class="mb-1" v-model="answer.applicantAnswer" type="text" :disabled="false" />

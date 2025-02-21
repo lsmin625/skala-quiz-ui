@@ -184,7 +184,7 @@ const clearCacheQuiz = async () => {
             </ItemsTable>
         </template>
         <template v-if="isSetup">
-            <div class="m-1 p-2 bg-warning-subtle">
+            <div class="m-1 p-2">
                 <InlineInput class="m-1" label="난이도(상)" v-model="quizOption.high" type="number" />
                 <InlineInput class="m-1" label="난이도(중)" v-model="quizOption.medium" type="number" />
                 <InlineInput class="m-1" label="난이도(하)" v-model="quizOption.low" type="number" />

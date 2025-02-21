@@ -90,11 +90,10 @@ const finishQuiz = () => {
     if (confirmed) {
       const url = '/api//applicant-quiz/submit'
       const requestBody = getRequestBody()
-      await apiCall.post(url, null, requestBody)
-
+      const { body: pagedList } = await apiCall.post(url, null, requestBody)
       isStarted.value = false
       storeQuizQuestionList([])
-      storeQuizAnswerList([])
+      storeQuizAnswerList(pagedList.list)
       router.push('/quiz-bye')
     }
   })
@@ -132,8 +131,8 @@ const getRequestBody = () => {
       <template v-for="(item, index) in quizQuestionList" :key="index">
         <QuizItem :index="index" :setting="item" />
       </template>
-      <div class="d-flex justify-content-end mt-2">
-        <button class="btn btn-primary btn-sm" @click="finishQuiz">제출</button>
+      <div class="d-flex justify-content-end mt-2 mb-2 me-1">
+        <button class="btn btn-primary" @click="finishQuiz">제출</button>
       </div>
     </div>
   </div>
