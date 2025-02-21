@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, onBeforeUnmount, reactive } from "vue";
 import QRCode from "qrcode";
-import { getTimestamp } from '@/scripts/time-util';
+import { getDate, getTimestamp } from '@/scripts/time-util';
 import { SubjectSetting } from './_interfaces'
+import apiCall from '@/scripts/api-call'
+import { notifyError } from "@/scripts/store-popups";
 
 const BASE_URL = "http://localhost:5173/quiz";
 // const BASE_URL = "https://smlee1-skala-pro-sk25a-prop5173nprofessor.remote.amdp.skala-ai.com/quiz";
@@ -28,6 +30,20 @@ const show = () => {
     QRCode.toCanvas(document.getElementById("canvas"), qr.url, { errorCorrectionLevel: "L" });
   }
 };
+
+const finishQuiz = async () => {
+  const url = '/api/applicant-quiz/unfinished'
+  const queryString = {
+    subjectId: props.setting.id,
+    date: getDate(null, ''),
+  }
+  const { body } = await apiCall.get(url, null, queryString)
+  if (body.unfinishedCount > 0) {
+    notifyError(`${body.unfinishedCount}명이 미제출 상태입니다.`)
+  } else {
+    hide()
+  }
+}
 
 const hide = () => {
   if (document.getElementById("quizCode")?.classList.contains("show")) {
@@ -64,7 +80,7 @@ defineExpose({
               </div>
               <div class="d-flex justify-content-center mt-2">
                 <p class="fs-4">
-                  <a :href="qr.url">사이트</a> 접속 후
+                  <a :href="qr.url" target="_blank">사이트</a> 접속 후
                   <b class="text-primary">ID/이름</b>을 입력하고
                   <b class="text-primary">Quiz</b>를 풀어주세요.
                 </p>
@@ -78,7 +94,7 @@ defineExpose({
             <input type="range" v-model="qr.size" class="form-range" min="1" max="5" step="1">
           </div>
           <div class="col-4 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-2" data-bs-dismiss="modal" @click="hide">Quiz 종료
+            <button type="button" class="btn btn-primary me-2" @click="finishQuiz">Quiz 종료
             </button>
           </div>
         </div>

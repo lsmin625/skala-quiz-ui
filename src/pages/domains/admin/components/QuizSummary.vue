@@ -47,7 +47,7 @@ const hideSummary = () => {
 }
 
 const scoreQuiz = async () => {
-    const url = '/api/applicant-quiz/score'
+    const url = `/api/applicant-quiz/score?date=${scoreDate.value}`
     const subject = {
         id: props.setting.id,
         subjectName: props.setting.subjectName,
