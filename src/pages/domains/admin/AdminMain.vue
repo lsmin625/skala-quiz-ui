@@ -45,7 +45,6 @@ const logout = () => {
   document.cookie = "bff-access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   router.push('/')
 }
-
 </script>
 
 <template>
@@ -75,7 +74,7 @@ const logout = () => {
                 style="width: 120px;" placeholder="비밀번호 확인" />
             </div>
             <div class="d-flex justify-content-center mt-1">
-              <button type="submit" class="btn btn-secondary btn-sm me-2" @click="changePassword()">확인</button>
+              <button type="submit" class="btn btn-secondary btn-sm m-1" @click="changePassword()">확인</button>
             </div>
           </div>
         </div>

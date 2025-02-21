@@ -13,8 +13,8 @@ export const getTimestamp = (date?: Date | null): string => {
 
 export const getDateTime = (date?: Date | null, dateDelimeter?: string | null, timeDelimeter?: string | null): string => {
   const now = date ? date : new Date();
-  const dateBar = dateDelimeter ? dateDelimeter : '-'
-  const timeBar = timeDelimeter ? timeDelimeter : ':'
+  const dateBar = dateDelimeter === undefined || dateDelimeter === null ? '-' : dateDelimeter
+  const timeBar = timeDelimeter === undefined || timeDelimeter === null ? ':' : timeDelimeter
 
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -28,7 +28,7 @@ export const getDateTime = (date?: Date | null, dateDelimeter?: string | null, t
 
 export const getDate = (date?: Date | null, dateDelimeter?: string | null): string => {
   const now = date ? date : new Date();
-  const dateBar = dateDelimeter ? dateDelimeter : '-'
+  const dateBar = dateDelimeter === undefined || dateDelimeter === null ? '-' : dateDelimeter
 
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -39,7 +39,7 @@ export const getDate = (date?: Date | null, dateDelimeter?: string | null): stri
 
 export const getTime = (date?: Date | null, timeDelimeter?: string | null): string => {
   const now = date ? date : new Date();
-  const timeBar = timeDelimeter ? timeDelimeter : ':'
+  const timeBar = timeDelimeter === undefined || timeDelimeter === null ? ':' : timeDelimeter
 
   const hours = String(now.getHours()).padStart(2, '0');
   const minutes = String(now.getMinutes()).padStart(2, '0');

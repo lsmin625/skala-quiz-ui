@@ -4,7 +4,7 @@ import { SubjectSetting } from './_interfaces'
 import QuizList from './QuizList.vue';
 import QuizSummary from './QuizSummary.vue';
 import apiCall from '@/scripts/api-call'
-import { getTimestamp } from '@/scripts/time-util';
+import { getTimestamp, getDate } from '@/scripts/time-util';
 
 const props = defineProps<{
     setting: SubjectSetting
@@ -14,7 +14,8 @@ const emit = defineEmits(['save', 'delete'])
 
 const watchTargets = reactive({
     subjectName: props.setting.subjectName,
-    applicantCount: 0
+    totalCount: 0,
+    currentCount: 0
 })
 
 const emitSave = () => {
@@ -49,11 +50,17 @@ const downloadScore = async () => {
 
 
 const getApplicantCount = async () => {
-    watchTargets.applicantCount = 0
-    const url = `/api/applicant-quiz/applicant/count?subjectId=${props.setting.id}`
-    const { body } = await apiCall.get(url, null, null)
+    watchTargets.totalCount = 0
+    watchTargets.currentCount = 0
+    const url = '/api/applicant-quiz/applicant/count'
+    const queryString = {
+        subjectId: props.setting.id,
+        date: getDate(null, "")
+    }
+    const { body } = await apiCall.get(url, null, queryString)
     if (body) {
-        watchTargets.applicantCount = body.applicantCount || 0
+        watchTargets.totalCount = body.totalCount || 0
+        watchTargets.currentCount = body.currentCount || 0
     }
 }
 
@@ -72,7 +79,11 @@ onMounted(async () => {
                         <InlineInput class="mb-1" label="과정명" v-model="watchTargets.subjectName" type="text" />
                     </div>
                     <div class="col">
-                        <InlineInput class="mb-1" label="응시자수" v-model="watchTargets.applicantCount" type="text"
+                        <InlineInput class="mb-1" label="완료" v-model="watchTargets.totalCount" type="text"
+                            :disabled="true" />
+                    </div>
+                    <div class="col">
+                        <InlineInput class="mb-1" label="진행" v-model="watchTargets.currentCount" type="text"
                             :disabled="true" />
                     </div>
                 </div>
@@ -84,10 +95,10 @@ onMounted(async () => {
                 <button class="btn btn-sm btn-danger me-1" @click="emitDelete">
                     삭제
                 </button>
-                <button v-if="watchTargets.applicantCount > 0" class="btn btn-sm btn-secondary me-1" @click="scoreQuiz">
+                <button v-if="watchTargets.totalCount > 0" class="btn btn-sm btn-secondary me-1" @click="scoreQuiz">
                     Quiz 채점
                 </button>
-                <button v-if="watchTargets.applicantCount > 0" class="btn btn-sm btn-secondary" @click="downloadScore">
+                <button v-if="watchTargets.totalCount > 0" class="btn btn-sm btn-secondary" @click="downloadScore">
                     점수 (XLS)
                 </button>
             </div>
