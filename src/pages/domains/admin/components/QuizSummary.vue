@@ -81,23 +81,24 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="bg-info-subtle m-0 mt-2 p-1">
+    <div class="bg-warning-subtle m-0 mt-2 p-1">
         <div class="row m-1">
             <div class="col-2 d-flex justify-content-start">
                 <h5 class="fw-bold pt-2"><i class="bi bi-check-circle fw-bold fs-5 me-2"></i>Quiz 채점 관리</h5>
             </div>
             <div class="col d-flex justify-content-end">
                 <InlineInput class="me-1" v-model="scoreDate" type="text" placeholder="출제일(YYYYMMDD)" />
-                <button class="btn btn-sm btn-outline-danger me-1" @click="checkToScoreQuiz">
+                <button class="btn btn-sm btn-outline-primary me-1" @click="checkToScoreQuiz">
                     Quiz 채점
                 </button>
-                <button v-if="table.items.length === 0" class="btn btn-sm btn-outline-danger me-1" @click="showSummary">
+                <button v-if="table.items.length === 0" class="btn btn-sm btn-outline-primary me-1"
+                    @click="showSummary">
                     보이기
                 </button>
-                <button v-else class="btn btn-sm btn-outline-danger me-1" @click="hideSummary">
+                <button v-else class="btn btn-sm btn-outline-primary me-1" @click="hideSummary">
                     숨기기
                 </button>
-                <button class="btn btn-sm btn-outline-danger" @click="downloadScore">
+                <button class="btn btn-sm btn-outline-primary" @click="downloadScore">
                     점수 (XLS)
                 </button>
             </div>
