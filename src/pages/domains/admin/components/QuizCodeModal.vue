@@ -6,8 +6,9 @@ import { SubjectSetting } from './_interfaces'
 import apiCall from '@/scripts/api-call'
 import { notifyError } from "@/scripts/store-popups";
 
-const BASE_URL = "http://localhost:5173/quiz";
+// const BASE_URL = "http://localhost:5173/quiz";
 // const BASE_URL = "https://smlee1-skala-pro-sk25a-prop5173nprofessor.remote.amdp.skala-ai.com/quiz";
+const BASE_URL = import.meta.env.VITE_QUIZ_BASE_URL
 
 const props = defineProps<{
   setting: SubjectSetting
