@@ -133,7 +133,7 @@ const getRequestBody = () => {
       </div>
     </div>
     <div v-else>
-      <div v-if="isFinished" class="container mt-5 d-flex flex-column">
+      <div v-if="isFinished" class="container m-2 d-flex flex-column">
         <div class="fs-2 text-center">
           제출이 완료된 답안이 존재합니다.
         </div>

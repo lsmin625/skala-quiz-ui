@@ -13,14 +13,22 @@ onMounted(() => {
   quizAnswerList.value.forEach(quizAnswer => {
     score.value += quizAnswer.applicantScore
   })
+
+  if (score.value === 0) {
+    window.close()
+  }
 })
 
 </script>
 
 <template>
   <div class="container mt-5 d-flex flex-column">
-    <div class="fs-2 text-center">
+    <div v-if="score > 0" class="fs-2 text-center">
       {{ score }}점! 수고 하셨습니다.
+      <i class="bi bi-emoji-laughing"></i>
+    </div>
+    <div v-else class="fs-2 text-center">
+      수고 하셨습니다.
       <i class="bi bi-emoji-laughing"></i>
     </div>
   </div>
