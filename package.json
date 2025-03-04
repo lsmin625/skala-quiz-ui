@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --mode dev",
-    "stg": "vite --mode stg",
-    "prd": "vite --mode prd",
+    "dev": "vite --mode dev --host",
+    "stg": "vite --mode stg --host",
+    "prd": "vite --mode prd --host",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "deploy": "vue-tsc && vite build"
