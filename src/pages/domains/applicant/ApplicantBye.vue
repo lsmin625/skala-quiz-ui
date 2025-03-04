@@ -13,7 +13,6 @@ onMounted(() => {
   quizAnswerList.value.forEach(quizAnswer => {
     score.value += quizAnswer.applicantScore
   })
-  console.log(quizAnswerList.value)
 })
 
 </script>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, onMounted, ref, toRaw } from 'vue'
-import apiCall from '@/scripts/api-call'
+import apiCall, { Response } from '@/scripts/api-call'
 import { notifyError, notifyConfirm } from '@/scripts/store-popups'
 import { useRoute, useRouter } from 'vue-router'
 import QuizItem from './components/QuizItem.vue'
@@ -19,6 +19,7 @@ const router = useRouter()
 const route = useRoute()
 
 const isStarted = ref(false)
+const isFinished = ref(false)
 
 onMounted(async () => {
   if (route.query.subjectId) {
@@ -75,8 +76,12 @@ const startQuiz = async () => {
 
   const url = '/api//applicant-quiz/start'
   const requestBody = getRequestBody()
-  await apiCall.post(url, null, requestBody)
-
+  const response = await apiCall.justPost(url, null, requestBody)
+  if (response.result === Response.SUCCESS) {
+    isFinished.value = false
+  } else {
+    isFinished.value = true
+  }
   isStarted.value = true
 }
 
@@ -128,11 +133,18 @@ const getRequestBody = () => {
       </div>
     </div>
     <div v-else>
-      <template v-for="(item, index) in quizQuestionList" :key="index">
-        <QuizItem :index="index" :setting="item" />
-      </template>
-      <div class="d-flex justify-content-end mt-2 mb-2 me-1">
-        <button class="btn btn-primary" @click="finishQuiz">제출</button>
+      <div v-if="isFinished" class="container mt-5 d-flex flex-column">
+        <div class="fs-2 text-center">
+          제출이 완료된 답안이 존재합니다.
+        </div>
+      </div>
+      <div v-else>
+        <template v-for="(item, index) in quizQuestionList" :key="index">
+          <QuizItem :index="index" :setting="item" />
+        </template>
+        <div class="d-flex justify-content-end mt-2 mb-2 me-1">
+          <button class="btn btn-primary" @click="finishQuiz">제출</button>
+        </div>
       </div>
     </div>
   </div>
