@@ -16,7 +16,8 @@ const answer = ref<QuizAnswer>({
   quizId: props.setting.id,
   quizQuestion: `${props.index + 1}. ${props.setting.quizQuestion}`,
   quizAnswer: props.setting.quizQuestion,
-  applicantAnswer: ''
+  applicantAnswer: '',
+  applicantScore: 0
 })
 
 const options = ref<Option[]>([])
