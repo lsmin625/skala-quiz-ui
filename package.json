@@ -7,9 +7,9 @@
     "dev": "vite --mode dev --host",
     "stg": "vite --mode stg --host",
     "prd": "vite --mode prd --host",
-    "build": "vue-tsc && vite build",
+    "build": "vue-tsc && vite build --mode prd",
     "preview": "vite preview",
-    "deploy": "vue-tsc && vite build"
+    "deploy": "vue-tsc && vite build --mode prd"
   },
   "dependencies": {
     "bootstrap": "^5.3.2",
