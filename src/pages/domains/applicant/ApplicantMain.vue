@@ -74,7 +74,7 @@ const startQuiz = async () => {
   }
   localStorage.setItem(ITEM_KEY, JSON.stringify(item))
 
-  const url = '/api//applicant-quiz/start'
+  const url = '/api/applicant-quiz/start'
   const requestBody = getRequestBody()
   const response = await apiCall.justPost(url, null, requestBody)
   if (response.result === Response.SUCCESS) {
@@ -93,7 +93,7 @@ const finishQuiz = () => {
 
   notifyConfirm('답안을 제출 하시겠습니까?', async (confirmed: boolean) => {
     if (confirmed) {
-      const url = '/api//applicant-quiz/submit'
+      const url = '/api/applicant-quiz/submit'
       const requestBody = getRequestBody()
       const { body: pagedList } = await apiCall.post(url, null, requestBody)
       isStarted.value = false
